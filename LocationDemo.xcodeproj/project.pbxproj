@@ -15,7 +15,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		791D5E682040025400E5B9A9 /* LocationsGPX.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LocationsGPX.gpx; sourceTree = "<group>"; };
 		79F0B2FC203EAE350070E7AD /* LocationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79F0B2FF203EAE350070E7AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79F0B301203EAE350070E7AD /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -69,7 +68,6 @@
 				79F0B2FF203EAE350070E7AD /* AppDelegate.swift */,
 				79F0B306203EAE350070E7AD /* Assets.xcassets */,
 				79F0B308203EAE350070E7AD /* LaunchScreen.storyboard */,
-				791D5E682040025400E5B9A9 /* LocationsGPX.gpx */,
 			);
 			path = "Supported Files";
 			sourceTree = "<group>";
