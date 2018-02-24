@@ -39,20 +39,15 @@ class LocationViewController: UIViewController {
         self.mapView.delegate = self
         setupTableView()
 
+        locationManager.requestAlwaysAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        locationManager.requestAlwaysAuthorization()
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.requestLocation()
-            //            locationManager.startUpdatingHeading()
-            //            locationManager.startUpdatingLocation()
-        }
-
     }
 
     func setupTableView() {
@@ -99,7 +94,9 @@ extension LocationViewController: CLLocationManagerDelegate {
 //        myAnnotation.title = NSLocalizedString("me", comment: "user location in mapView")
 //        mapView.addAnnotation(myAnnotation)
 
-        print("coordinate: \(location.coordinate)")
+        print("----User's Location----")
+        print("latitude: \(location.coordinate.latitude)")
+        print("longitude: \(location.coordinate.longitude)")
         print("altitude: \(location.altitude) meters")
         print("timestamp: \(location.timestamp)")
         print("speed: \(location.speed)")
@@ -107,7 +104,7 @@ extension LocationViewController: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        print("heading: \(newHeading)")
+        print("heading: \(newHeading.)")
     }
 
     // if user not allow location service authorization, use this to open settings
@@ -179,7 +176,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             let beaconVC = BeaconViewController()
             self.present(beaconVC, animated: true, completion: nil)
         case 1:
-            break
+            locationManager.requestLocation()
         case 2:
             break
         case 3:
