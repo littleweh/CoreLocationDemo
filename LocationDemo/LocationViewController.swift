@@ -11,66 +11,56 @@ import CoreLocation
 import MapKit
 
 class LocationViewController: UIViewController {
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var textView: UIView!
+    @IBOutlet weak var tableView: UITableView!
     let locationManager = CLLocationManager()
-
-    let mapView = MKMapView()
-    let tableView = UITableView()
-
+    let cellIdentifier = "demoItems"
+    var demoItems: [String] = [
+        NSLocalizedString(
+            "iBeacon (Indoor)",
+            comment: "in TableView"
+        ),
+        NSLocalizedString(
+            "requestLocation(once)",
+            comment: "in TableView"
+        ),
+        NSLocalizedString(
+            "startUpdatingLocation",
+            comment: "in TableView"
+        ),
+        NSLocalizedString(
+            "Background",
+            comment: "in TableView"
+        )
+    ]
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(mapView)
-        self.view.addSubview(tableView)
         self.mapView.delegate = self
-        self.tableView.delegate = self
+        setupTableView()
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupMapView()
-        setupTableView()
-
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
 
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//            locationManager.requestLocation()
-//            locationManager.startUpdatingHeading()
-            locationManager.startUpdatingLocation()
+            locationManager.requestLocation()
+            //            locationManager.startUpdatingHeading()
+            //            locationManager.startUpdatingLocation()
         }
 
     }
 
-    func setupMapView() {
-        mapView.mapType = .standard
-        mapView.isZoomEnabled = true
-        mapView.isScrollEnabled = true
-        mapView.showsUserLocation = true
-
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            mapView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            mapView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            mapView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor),
-            mapView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.5)
-        ])
-    }
-
     func setupTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor)
-        ])
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
 
+        let nib = UINib(nibName: "ItemsTableViewCell", bundle: nil)
+        self.tableView.register(nib, forCellReuseIdentifier: cellIdentifier)
     }
 
 }
@@ -100,6 +90,14 @@ extension LocationViewController: CLLocationManagerDelegate {
         )
 
         self.mapView.setRegion(region, animated: true)
+
+//        let myAnnotation = MKPointAnnotation()
+//        myAnnotation.coordinate = CLLocationCoordinate2D(
+//            latitude: location.coordinate.latitude,
+//            longitude: location.coordinate.longitude
+//        )
+//        myAnnotation.title = NSLocalizedString("me", comment: "user location in mapView")
+//        mapView.addAnnotation(myAnnotation)
 
         print("coordinate: \(location.coordinate)")
         print("altitude: \(location.altitude) meters")
@@ -155,7 +153,41 @@ extension LocationViewController: MKMapViewDelegate {
 
 }
 
-extension LocationViewController: UITableViewDelegate {
+extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return demoItems.count
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ItemsTableViewCell
+            else {
+                return UITableViewCell()
+        }
+        cell.itemLabel.text = demoItems[indexPath.row]
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            // present iBeacon Page
+            let beaconVC = BeaconViewController()
+            self.present(beaconVC, animated: true, completion: nil)
+        case 1:
+            break
+        case 2:
+            break
+        case 3:
+            break
+        default:
+            break
+        }
+    }
 
 }
 

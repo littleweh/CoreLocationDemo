@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,9 +18,46 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.0" green="0.32852089410000002" blue="0.57488495110000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2wJ-LK-uLB">
+                                <rect key="frame" x="0.0" y="387" width="375" height="280"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" red="0.70678720210000001" green="0.90886748500000003" blue="1" alpha="0.75540453770000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="yXi-U0-Kw6"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="xSc-jw-Bw2"/>
+                                </connections>
+                            </tableView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="FAK-w7-E5A">
+                                <rect key="frame" x="0.0" y="20" width="375" height="233.5"/>
+                            </mapView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2sQ-XP-aeU">
+                                <rect key="frame" x="0.0" y="253.5" width="375" height="133.5"/>
+                                <color key="backgroundColor" red="0.70678720213055557" green="0.90886748496111103" blue="1" alpha="0.75540453767123283" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="2wJ-LK-uLB" firstAttribute="top" secondItem="2sQ-XP-aeU" secondAttribute="bottom" id="0kA-hd-atD"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2wJ-LK-uLB" secondAttribute="trailing" id="8df-fV-sLM"/>
+                            <constraint firstItem="2wJ-LK-uLB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9Zr-Sg-Cl3"/>
+                            <constraint firstItem="2sQ-XP-aeU" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.2" id="ADq-hr-uaV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="2wJ-LK-uLB" secondAttribute="bottom" id="CW3-bR-eie"/>
+                            <constraint firstItem="FAK-w7-E5A" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="OHS-8U-uG8"/>
+                            <constraint firstItem="FAK-w7-E5A" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.35" id="SS5-hN-aVj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2sQ-XP-aeU" secondAttribute="trailing" id="UX5-bC-LcH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FAK-w7-E5A" secondAttribute="trailing" id="glP-EN-523"/>
+                            <constraint firstItem="FAK-w7-E5A" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="h8M-YS-l8Q"/>
+                            <constraint firstItem="2sQ-XP-aeU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="kcE-cp-u3C"/>
+                            <constraint firstItem="2sQ-XP-aeU" firstAttribute="top" secondItem="FAK-w7-E5A" secondAttribute="bottom" id="qnQ-pR-mBQ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="FAK-w7-E5A" id="C2L-r9-xTg"/>
+                        <outlet property="tableView" destination="2wJ-LK-uLB" id="faR-5i-PLM"/>
+                        <outlet property="textView" destination="2sQ-XP-aeU" id="nIt-K7-Feh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
