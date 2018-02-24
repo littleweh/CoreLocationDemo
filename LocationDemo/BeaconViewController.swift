@@ -31,7 +31,7 @@ class BeaconViewController: UIViewController {
                 beaconLocationManager.requestWhenInUseAuthorization()
             }
 
-            if let uuid = UUID(uuidString: beaconUUID) as? UUID {
+            if let uuid = UUID(uuidString: beaconUUID) {
                 monitorBeaconRegion(with: uuid)
 //                rangingBeacons(with: uuid)
             } else {

@@ -11,10 +11,12 @@ import CoreLocation
 import MapKit
 
 class LocationViewController: UIViewController {
+    @IBOutlet weak var showTextLabel: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var textView: UIView!
     @IBOutlet weak var tableView: UITableView!
     let locationManager = CLLocationManager()
+    let headerIdentifier = "ItemsHeaderCell"
     let cellIdentifier = "demoItems"
     var demoItems: [String] = [
         NSLocalizedString(
@@ -30,7 +32,15 @@ class LocationViewController: UIViewController {
             comment: "in TableView"
         ),
         NSLocalizedString(
-            "Background",
+            "startUpdatingHeading",
+            comment: "in TableView"
+        ),
+        NSLocalizedString(
+            "Significant-change",
+            comment: "in TableView"
+        ),
+        NSLocalizedString(
+            "Stop",
             comment: "in TableView"
         )
     ]
@@ -42,7 +52,8 @@ class LocationViewController: UIViewController {
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.requestLocation()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
     }
 
@@ -68,7 +79,7 @@ extension LocationViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard
-            let location = locations.first as? CLLocation
+            let location = locations.last
             else { return }
 
         let center = CLLocationCoordinate2D(
@@ -86,25 +97,58 @@ extension LocationViewController: CLLocationManagerDelegate {
 
         self.mapView.setRegion(region, animated: true)
 
-//        let myAnnotation = MKPointAnnotation()
-//        myAnnotation.coordinate = CLLocationCoordinate2D(
-//            latitude: location.coordinate.latitude,
-//            longitude: location.coordinate.longitude
-//        )
-//        myAnnotation.title = NSLocalizedString("me", comment: "user location in mapView")
-//        mapView.addAnnotation(myAnnotation)
+        let myAnnotation = MKPointAnnotation()
+        myAnnotation.coordinate = CLLocationCoordinate2D(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+        mapView.addAnnotation(myAnnotation)
 
         print("----User's Location----")
+        var level = "N/A"
+        if let floor = location.floor {
+            level = "\(floor.level)"
+        }
         print("latitude: \(location.coordinate.latitude)")
         print("longitude: \(location.coordinate.longitude)")
         print("altitude: \(location.altitude) meters")
+        print("floor: \(level)")
         print("timestamp: \(location.timestamp)")
         print("speed: \(location.speed)")
         print("course: \(location.course)")
+
+        showTextLabel.text = """
+        ----User's Location----
+        latitude: \(location.coordinate.latitude)
+        longitude: \(location.coordinate.longitude)
+        altitude: \(location.altitude) meters
+        floor: \(level)
+        timestamp: \(location.timestamp)
+        speed: \(location.speed)
+        course: \(location.course)
+        """
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        print("heading: \(newHeading.)")
+        print("----Device heading----")
+        print("magneticHeading: \(newHeading.magneticHeading) degree")
+        print("trueHeading: \(newHeading.trueHeading) degree")
+        print("accuracy: \(newHeading.headingAccuracy) (maximum deviation)")
+        print("x: \(newHeading.x)")
+        print("y: \(newHeading.y)")
+        print("z: \(newHeading.z)")
+        print("timestamp: \(newHeading.timestamp)")
+
+        showTextLabel.text = """
+        ----Device heading----
+        magneticHeading: \(newHeading.magneticHeading) degree
+        trueHeading: \(newHeading.trueHeading) degree
+        accuracy: \(newHeading.headingAccuracy) (maximum deviation)
+        x: \(newHeading.x)
+        y: \(newHeading.y)
+        z: \(newHeading.z)
+        timestamp: \(newHeading.timestamp)
+        """
     }
 
     // if user not allow location service authorization, use this to open settings
@@ -176,11 +220,40 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             let beaconVC = BeaconViewController()
             self.present(beaconVC, animated: true, completion: nil)
         case 1:
+            print("---------------------------------")
+            print("request user's location only once")
+            print("---------------------------------")
             locationManager.requestLocation()
         case 2:
-            break
+            print("---------------------------------")
+            print("keep updating user's locations")
+            print("---------------------------------")
+            locationManager.startUpdatingLocation()
         case 3:
-            break
+            print("---------------------------------")
+            print("keep updating user's heading")
+            print("---------------------------------")
+            locationManager.startUpdatingHeading()
+        case 4:
+            if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+                print("need Always authorization")
+            } else {
+                locationManager.distanceFilter = 1 // meters
+                let thresholds = locationManager.distanceFilter
+                print("---------------------------------")
+                print("Significant-change location service with \(thresholds) meter(s)")
+                print("---------------------------------")
+                locationManager.startMonitoringSignificantLocationChanges()
+            }
+
+        case 5:
+            print("---------------------------------")
+            print("stopUpdating location/heading")
+            print("---------------------------------")
+            locationManager.stopUpdatingLocation()
+            locationManager.stopUpdatingHeading()
+            locationManager.stopMonitoringSignificantLocationChanges()
+            showTextLabel.text = "stop Updating location/heading"
         default:
             break
         }
