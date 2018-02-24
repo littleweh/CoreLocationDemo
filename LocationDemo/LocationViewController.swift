@@ -18,6 +18,7 @@ class LocationViewController: UIViewController {
     let locationManager = CLLocationManager()
     let headerIdentifier = "ItemsHeaderCell"
     let cellIdentifier = "demoItems"
+
     var demoItems: [DemoItems] = [
             DemoItems.Beacon,
             DemoItems.LocationOnce,
@@ -25,7 +26,7 @@ class LocationViewController: UIViewController {
             DemoItems.Heading,
             DemoItems.SignificantChange,
     ]
-    var selectedLocationService: DemoItems = .Beacon
+    var selectedLocationService: DemoItems = DemoItems.None
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -223,7 +224,11 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             let itemIndex = indexPath?.row
             else { return }
 
-        switch demoItems[itemIndex] {
+        selectedLocationService = demoItems[itemIndex]
+
+        switch selectedLocationService {
+        case .None:
+            break
         case .Beacon:
             let beaconVC = BeaconViewController()
             self.present(beaconVC, animated: true, completion: nil)
@@ -266,7 +271,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             else { return }
 
         switch demoItems[itemIndex] {
-        case .Beacon, .LocationOnce:
+        case .Beacon, .LocationOnce, .None:
             break
         case .LocationUpdating:
             print("---------------------------------")
@@ -284,6 +289,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             print("---------------------------------")
             locationManager.stopMonitoringSignificantLocationChanges()
         }
+        selectedLocationService = .None
 
     }
 

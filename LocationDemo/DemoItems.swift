@@ -13,5 +13,6 @@ enum DemoItems: String {
     LocationOnce = "requestLocation (once)",
     LocationUpdating = "UpdatingLocation",
     Heading = "UpdatingHeading",
-    SignificantChange = "Significant-Change Location"
+    SignificantChange = "Significant-Change Location",
+    None = ""
 }
