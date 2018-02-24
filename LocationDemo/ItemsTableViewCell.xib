@@ -23,23 +23,51 @@
                         <rect key="frame" x="16" y="11" width="42" height="20.5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </stackView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ga5-R6-hzN">
-                        <rect key="frame" x="16" y="8" width="288" height="27.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Items" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ga5-R6-hzN">
+                        <rect key="frame" x="16" y="8" width="176" height="27.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5NB-uZ-LtA">
+                        <rect key="frame" x="256" y="8" width="48" height="27.5"/>
+                        <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="48" id="7aM-Ed-e4j"/>
+                        </constraints>
+                        <state key="normal" title="Start">
+                            <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ff-yI-ycn">
+                        <rect key="frame" x="200" y="8" width="48" height="27.5"/>
+                        <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="48" id="QMS-Ct-SDO"/>
+                        </constraints>
+                        <state key="normal" title="Stop">
+                            <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </state>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="7ff-yI-ycn" secondAttribute="bottom" constant="8" id="5MA-Rr-n0S"/>
                     <constraint firstAttribute="bottom" secondItem="Ga5-R6-hzN" secondAttribute="bottom" constant="8" id="7VP-SV-bbt"/>
+                    <constraint firstItem="7ff-yI-ycn" firstAttribute="leading" secondItem="Ga5-R6-hzN" secondAttribute="trailing" constant="8" id="HrX-7S-40x"/>
+                    <constraint firstAttribute="bottom" secondItem="5NB-uZ-LtA" secondAttribute="bottom" constant="8" id="Lb1-Mg-LRn"/>
                     <constraint firstItem="Ga5-R6-hzN" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="NMd-SP-9MZ"/>
-                    <constraint firstAttribute="trailing" secondItem="Ga5-R6-hzN" secondAttribute="trailing" constant="16" id="hZK-l9-p4N"/>
+                    <constraint firstAttribute="trailing" secondItem="5NB-uZ-LtA" secondAttribute="trailing" constant="16" id="U0N-lo-tS4"/>
+                    <constraint firstItem="7ff-yI-ycn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="UZQ-GJ-0uz"/>
+                    <constraint firstItem="5NB-uZ-LtA" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="hTV-YJ-lwk"/>
+                    <constraint firstItem="5NB-uZ-LtA" firstAttribute="leading" secondItem="7ff-yI-ycn" secondAttribute="trailing" constant="8" id="mB0-VG-sgh"/>
                     <constraint firstItem="Ga5-R6-hzN" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="xQM-Xa-coy"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="itemLabel" destination="Ga5-R6-hzN" id="ibK-Ah-hEE"/>
+                <outlet property="startButton" destination="5NB-uZ-LtA" id="2WG-so-kA7"/>
+                <outlet property="stopButton" destination="7ff-yI-ycn" id="Ix1-ue-rf3"/>
             </connections>
         </tableViewCell>
     </objects>

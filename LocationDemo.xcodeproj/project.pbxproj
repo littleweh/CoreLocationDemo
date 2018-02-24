@@ -12,6 +12,7 @@
 		791D5E72204120A200E5B9A9 /* BeaconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E71204120A200E5B9A9 /* BeaconViewController.swift */; };
 		791D5E7520415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */; };
 		791D5E7620415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */; };
+		791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E772041C4C400E5B9A9 /* DemoItems.swift */; };
 		79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B2FF203EAE350070E7AD /* AppDelegate.swift */; };
 		79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B301203EAE350070E7AD /* LocationViewController.swift */; };
 		79F0B305203EAE350070E7AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F0B303203EAE350070E7AD /* Main.storyboard */; };
@@ -25,6 +26,7 @@
 		791D5E71204120A200E5B9A9 /* BeaconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconViewController.swift; sourceTree = "<group>"; };
 		791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemsHeaderTableViewCell.xib; sourceTree = "<group>"; };
+		791D5E772041C4C400E5B9A9 /* DemoItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoItems.swift; sourceTree = "<group>"; };
 		79F0B2FC203EAE350070E7AD /* LocationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79F0B2FF203EAE350070E7AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79F0B301203EAE350070E7AD /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */,
 				791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */,
 				791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */,
+				791D5E772041C4C400E5B9A9 /* DemoItems.swift */,
 			);
 			path = LocationDemo;
 			sourceTree = "<group>";
@@ -167,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				791D5E72204120A200E5B9A9 /* BeaconViewController.swift in Sources */,
+				791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */,
 				79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */,
 				79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */,
 				791D5E7520415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift in Sources */,

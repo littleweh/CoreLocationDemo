@@ -10,10 +10,15 @@ import UIKit
 
 class ItemsTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var itemLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        startButton.layer.cornerRadius = 0.2 * startButton.frame.height
+        stopButton.layer.cornerRadius = 0.2 * stopButton.frame.height
+        startButton.clipsToBounds = true
+        stopButton.clipsToBounds = true
     }
     
 }

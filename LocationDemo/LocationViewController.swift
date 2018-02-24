@@ -18,32 +18,15 @@ class LocationViewController: UIViewController {
     let locationManager = CLLocationManager()
     let headerIdentifier = "ItemsHeaderCell"
     let cellIdentifier = "demoItems"
-    var demoItems: [String] = [
-        NSLocalizedString(
-            "iBeacon (Indoor)",
-            comment: "in TableView"
-        ),
-        NSLocalizedString(
-            "requestLocation(once)",
-            comment: "in TableView"
-        ),
-        NSLocalizedString(
-            "startUpdatingLocation",
-            comment: "in TableView"
-        ),
-        NSLocalizedString(
-            "startUpdatingHeading",
-            comment: "in TableView"
-        ),
-        NSLocalizedString(
-            "Significant-change",
-            comment: "in TableView"
-        ),
-        NSLocalizedString(
-            "Stop",
-            comment: "in TableView"
-        )
+    var demoItems: [DemoItems] = [
+            DemoItems.Beacon,
+            DemoItems.LocationOnce,
+            DemoItems.LocationUpdating,
+            DemoItems.Heading,
+            DemoItems.SignificantChange,
     ]
+    var selectedLocationService: DemoItems = .Beacon
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.mapView.delegate = self
@@ -209,32 +192,57 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 return UITableViewCell()
         }
-        cell.itemLabel.text = demoItems[indexPath.row]
+        cell.itemLabel.text = demoItems[indexPath.row].rawValue
+
+        switch demoItems[indexPath.row] {
+        case .Beacon, .LocationOnce:
+            cell.stopButton.isHidden = true
+        default:
+            break
+        }
+
+        cell.startButton.addTarget(
+            self,
+            action: #selector(startFunction(_:)),
+            for: .touchUpInside
+        )
+        cell.stopButton.addTarget(
+            self,
+            action: #selector(stopFunction(_:)),
+            for: .touchUpInside
+        )
+
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
-            // present iBeacon Page
+    @objc func startFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        switch demoItems[itemIndex] {
+        case .Beacon:
             let beaconVC = BeaconViewController()
             self.present(beaconVC, animated: true, completion: nil)
-        case 1:
+        case .LocationOnce:
             print("---------------------------------")
             print("request user's location only once")
             print("---------------------------------")
             locationManager.requestLocation()
-        case 2:
+        case .LocationUpdating:
             print("---------------------------------")
             print("keep updating user's locations")
             print("---------------------------------")
             locationManager.startUpdatingLocation()
-        case 3:
+        case .Heading:
             print("---------------------------------")
             print("keep updating user's heading")
             print("---------------------------------")
             locationManager.startUpdatingHeading()
-        case 4:
+        case .SignificantChange:
             if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
                 print("need Always authorization")
             } else {
@@ -245,18 +253,38 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
                 print("---------------------------------")
                 locationManager.startMonitoringSignificantLocationChanges()
             }
+        }
 
-        case 5:
+    }
+
+    @objc func stopFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        switch demoItems[itemIndex] {
+        case .Beacon, .LocationOnce:
+            break
+        case .LocationUpdating:
             print("---------------------------------")
-            print("stopUpdating location/heading")
+            print("stop updating user's locations")
             print("---------------------------------")
             locationManager.stopUpdatingLocation()
+        case .Heading:
+            print("---------------------------------")
+            print("stop updating user's heading")
+            print("---------------------------------")
             locationManager.stopUpdatingHeading()
+        case .SignificantChange:
+            print("---------------------------------")
+            print("stop monitoring significant location change")
+            print("---------------------------------")
             locationManager.stopMonitoringSignificantLocationChanges()
-            showTextLabel.text = "stop Updating location/heading"
-        default:
-            break
         }
+
     }
 
 }
