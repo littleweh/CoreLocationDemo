@@ -15,18 +15,21 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var textView: UIView!
     @IBOutlet weak var tableView: UITableView!
+
     let locationManager = CLLocationManager()
     let headerIdentifier = "ItemsHeaderCell"
     let cellIdentifier = "demoItems"
 
     var demoItems: [DemoItems] = [
-            DemoItems.Beacon,
-            DemoItems.LocationOnce,
-            DemoItems.LocationUpdating,
-            DemoItems.Heading,
-            DemoItems.SignificantChange,
+            DemoItems.beacon,
+            DemoItems.locationOnce,
+            DemoItems.locationUpdating,
+            DemoItems.heading,
+            DemoItems.significantChange,
+            DemoItems.visit
     ]
-    var selectedLocationService: DemoItems = DemoItems.None
+    var selectedLocationService: DemoItems = DemoItems.none
+    let dateFormatter = DateFormatter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +41,7 @@ class LocationViewController: UIViewController {
             locationManager.delegate = self
             locationManager.requestLocation()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.distanceFilter = 3 // meter
         }
     }
 
@@ -88,20 +92,12 @@ extension LocationViewController: CLLocationManagerDelegate {
         )
         mapView.addAnnotation(myAnnotation)
 
-        print("----User's Location----")
         var level = "N/A"
         if let floor = location.floor {
             level = "\(floor.level)"
         }
-        print("latitude: \(location.coordinate.latitude)")
-        print("longitude: \(location.coordinate.longitude)")
-        print("altitude: \(location.altitude) meters")
-        print("floor: \(level)")
-        print("timestamp: \(location.timestamp)")
-        print("speed: \(location.speed)")
-        print("course: \(location.course)")
 
-        showTextLabel.text = """
+        let locationInfo = """
         ----User's Location----
         latitude: \(location.coordinate.latitude)
         longitude: \(location.coordinate.longitude)
@@ -111,19 +107,34 @@ extension LocationViewController: CLLocationManagerDelegate {
         speed: \(location.speed)
         course: \(location.course)
         """
+
+        print(locationInfo)
+        showTextLabel.text = locationInfo
+
+        switch selectedLocationService {
+        case .significantChange:
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            FirebaseRef.saveLocationInfoWith(
+                location: location,
+                databaseRef: FirebaseRef.databaseSignificantChange,
+                dateFormatter: dateFormatter
+            )
+        case .locationUpdating:
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            FirebaseRef.saveLocationInfoWith(
+                location: location,
+                databaseRef: FirebaseRef.databaseUpdatingLocations,
+                dateFormatter: dateFormatter
+            )
+        default:
+            break
+        }
+
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        print("----Device heading----")
-        print("magneticHeading: \(newHeading.magneticHeading) degree")
-        print("trueHeading: \(newHeading.trueHeading) degree")
-        print("accuracy: \(newHeading.headingAccuracy) (maximum deviation)")
-        print("x: \(newHeading.x)")
-        print("y: \(newHeading.y)")
-        print("z: \(newHeading.z)")
-        print("timestamp: \(newHeading.timestamp)")
 
-        showTextLabel.text = """
+        let headingInfo = """
         ----Device heading----
         magneticHeading: \(newHeading.magneticHeading) degree
         trueHeading: \(newHeading.trueHeading) degree
@@ -133,6 +144,15 @@ extension LocationViewController: CLLocationManagerDelegate {
         z: \(newHeading.z)
         timestamp: \(newHeading.timestamp)
         """
+        print(headingInfo)
+        showTextLabel.text = headingInfo
+
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        FirebaseRef.saveHeadingInfoWith(
+            newHeading: newHeading,
+            databaseRef: FirebaseRef.databaseHeading,
+            dateFormatter: dateFormatter
+        )
     }
 
     // if user not allow location service authorization, use this to open settings
@@ -140,6 +160,38 @@ extension LocationViewController: CLLocationManagerDelegate {
         if status == CLAuthorizationStatus.denied {
             self.showLocationDisabledPopup()
         }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+        let visitInfo = """
+        ----Visit----
+        latitude: \(visit.coordinate.latitude)
+        longitude: \(visit.coordinate.longitude)
+        arrival date: \(visit.arrivalDate)
+        departure date: \(visit.departureDate)
+        horizontal accuracy: \(visit.horizontalAccuracy)
+        """
+        showTextLabel.text = visitInfo
+        print(visitInfo)
+
+//        let arrival = dateFormatter.string(from: visit.arrivalDate)
+//        let departure = dateFormatter.string(from: visit.departureDate)
+
+        let recordVisitReference = FirebaseRef.databaseVisits.child("test")
+        let object: [String: Any] = [
+            "coordinate": [
+                "latitude": visit.coordinate.latitude,
+                "longitude": visit.coordinate.longitude
+            ],
+//            "arrival_date": arrival,
+//            "departure_date": departure,
+            "arrival_date": "\(visit.arrivalDate)",
+            "departure_date": "\(visit.departureDate)",
+            "horizontal_accuracy": visit.horizontalAccuracy
+        ]
+        recordVisitReference
+            .child("\(visit.arrivalDate)_" + DemoItems.visit.rawValue)
+            .setValue(object)
     }
 
     func showLocationDisabledPopup() {
@@ -158,7 +210,7 @@ extension LocationViewController: CLLocationManagerDelegate {
         let openAction = UIAlertAction(
             title: "Open Settings",
             style: .default
-        ) { (actin) in
+        ) { _ in
             if let url = URL(string: UIApplicationOpenSettingsURLString) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
@@ -196,7 +248,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         cell.itemLabel.text = demoItems[indexPath.row].rawValue
 
         switch demoItems[indexPath.row] {
-        case .Beacon, .LocationOnce:
+        case .beacon, .locationOnce:
             cell.stopButton.isHidden = true
         default:
             break
@@ -227,37 +279,40 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         selectedLocationService = demoItems[itemIndex]
 
         switch selectedLocationService {
-        case .None:
+        case .none:
             break
-        case .Beacon:
+        case .beacon:
             let beaconVC = BeaconViewController()
             self.present(beaconVC, animated: true, completion: nil)
-        case .LocationOnce:
+        case .locationOnce:
             print("---------------------------------")
             print("request user's location only once")
             print("---------------------------------")
             locationManager.requestLocation()
-        case .LocationUpdating:
+        case .locationUpdating:
             print("---------------------------------")
             print("keep updating user's locations")
             print("---------------------------------")
             locationManager.startUpdatingLocation()
-        case .Heading:
+        case .heading:
             print("---------------------------------")
             print("keep updating user's heading")
             print("---------------------------------")
             locationManager.startUpdatingHeading()
-        case .SignificantChange:
+        case .significantChange:
             if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
                 print("need Always authorization")
             } else {
-                locationManager.distanceFilter = 1 // meters
-                let thresholds = locationManager.distanceFilter
                 print("---------------------------------")
-                print("Significant-change location service with \(thresholds) meter(s)")
+                print("Significant-change location service")
                 print("---------------------------------")
                 locationManager.startMonitoringSignificantLocationChanges()
             }
+        case .visit:
+            print("---------------------------------")
+            print("start monitoring visits")
+            print("---------------------------------")
+            locationManager.startMonitoringVisits()
         }
 
     }
@@ -271,27 +326,31 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             else { return }
 
         switch demoItems[itemIndex] {
-        case .Beacon, .LocationOnce, .None:
+        case .beacon, .locationOnce, .none:
             break
-        case .LocationUpdating:
+        case .locationUpdating:
             print("---------------------------------")
             print("stop updating user's locations")
             print("---------------------------------")
             locationManager.stopUpdatingLocation()
-        case .Heading:
+        case .heading:
             print("---------------------------------")
             print("stop updating user's heading")
             print("---------------------------------")
             locationManager.stopUpdatingHeading()
-        case .SignificantChange:
+        case .significantChange:
             print("---------------------------------")
             print("stop monitoring significant location change")
             print("---------------------------------")
             locationManager.stopMonitoringSignificantLocationChanges()
+        case .visit:
+            print("---------------------------------")
+            print("stop monitoring visits")
+            print("---------------------------------")
+            locationManager.stopMonitoringVisits()
         }
-        selectedLocationService = .None
+        selectedLocationService = .none
 
     }
 
 }
-

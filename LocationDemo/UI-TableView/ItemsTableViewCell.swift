@@ -20,5 +20,5 @@ class ItemsTableViewCell: UITableViewCell {
         startButton.clipsToBounds = true
         stopButton.clipsToBounds = true
     }
-    
+
 }

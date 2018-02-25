@@ -120,7 +120,6 @@ class BeaconViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
 
-
 }
 
 extension BeaconViewController: CLLocationManagerDelegate {
@@ -172,7 +171,9 @@ extension BeaconViewController: CLLocationManagerDelegate {
         print("didDetermineState")
         if state == CLRegionState.inside {
             if CLLocationManager.isRangingAvailable() {
+                // swiftlint:disable force_cast
                 manager.startRangingBeacons(in: region as! CLBeaconRegion)
+                // swiftlint:enable force_cast
             } else {
                 proximityLabel.text = NSLocalizedString(
                     "Beacon ranging is not supported",
@@ -181,7 +182,9 @@ extension BeaconViewController: CLLocationManagerDelegate {
             }
         } else {
             print("outside the region or unknown")
+            // swiftlint:disable force_cast
             manager.stopRangingBeacons(in: region as! CLBeaconRegion)
+            // swiftlint:enable force_cast
         }
     }
 
@@ -191,7 +194,9 @@ extension BeaconViewController: CLLocationManagerDelegate {
     ) {
         if CLLocationManager.isRangingAvailable() {
             print("in DidEnterRegion")
+            // swiftlint:disable force_cast
             manager.startRangingBeacons(in: region as! CLBeaconRegion)
+            // swiftlint:enable force_cast
         } else {
             // ToDo: show
             print("Beacon ranging is not supported")
@@ -256,7 +261,5 @@ extension BeaconViewController: CLLocationManagerDelegate {
             print("There is no Beacon detected")
         }
     }
-
-
 
 }

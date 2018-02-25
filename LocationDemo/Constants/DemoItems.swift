@@ -9,10 +9,11 @@
 import Foundation
 
 enum DemoItems: String {
-    case Beacon = "iBeacon (Indoor)",
-    LocationOnce = "requestLocation (once)",
-    LocationUpdating = "UpdatingLocation",
-    Heading = "UpdatingHeading",
-    SignificantChange = "Significant-Change Location",
-    None = ""
+    case beacon = "iBeacon (Indoor)",
+    locationOnce = "requestLocation (once)",
+    locationUpdating = "UpdatingLocation",
+    heading = "UpdatingHeading",
+    significantChange = "Significant-Change Location",
+    visit = "Visit",
+    none = ""
 }
