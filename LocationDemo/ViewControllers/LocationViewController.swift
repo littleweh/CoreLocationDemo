@@ -39,16 +39,42 @@ class LocationViewController: UIViewController {
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.requestLocation()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.distanceFilter = 3 // meter
+            locationManager.distanceFilter = kCLDistanceFilterNone // default
+            locationManager.allowsBackgroundLocationUpdates = true
+//            locationManager.pausesLocationUpdatesAutomatically = true
+            locationManager.requestLocation()
+        }
+
+    }
+
+    // MARK: Geocoding, call the function in didUpdateLocation
+    // from: https://developer.apple.com/documentation/corelocation/converting_between_coordinates_and_user_friendly_place_names
+    func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?)
+        -> Void ) {
+        // Use the last reported location.
+        if let lastLocation = self.locationManager.location {
+            let geocoder = CLGeocoder()
+
+            // Look up the location and pass it to the completion handler
+            geocoder.reverseGeocodeLocation(
+                lastLocation,
+                completionHandler: { (placemarks, error) in
+                    if error == nil {
+                        let firstLocation = placemarks?[0]
+                        completionHandler(firstLocation)
+                    } else {
+                        // An error occurred during geocoding.
+                        completionHandler(nil)
+                    }
+            })
+        } else {
+            // No location was available.
+            completionHandler(nil)
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
+    // MARK: setup UI
     func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -63,6 +89,13 @@ extension LocationViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("location detection failed with \(error.localizedDescription)")
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
+        if let error = error {
+            print("location deferred update failed with \(error.localizedDescription)")
+        }
+
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -129,6 +162,13 @@ extension LocationViewController: CLLocationManagerDelegate {
         default:
             break
         }
+
+//        self.lookUpCurrentLocation(completionHandler: { (placemark) in
+//            print(placemark?.country)
+//            print(placemark?.name)
+//        })
+
+        locationManager.allowDeferredLocationUpdates(untilTraveled: 0.0, timeout: 3.0)
 
     }
 
@@ -320,7 +360,6 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     @objc func stopFunction(_ sender: UIButton) {
         let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
         var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
-
         guard
             let itemIndex = indexPath?.row
             else { return }
