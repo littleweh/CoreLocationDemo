@@ -11,9 +11,8 @@
 		791D5E6F20411AD600E5B9A9 /* ItemsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E6D20411AD600E5B9A9 /* ItemsTableViewCell.swift */; };
 		791D5E7020411AD600E5B9A9 /* ItemsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */; };
 		791D5E72204120A200E5B9A9 /* BeaconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E71204120A200E5B9A9 /* BeaconViewController.swift */; };
-		791D5E7520415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */; };
-		791D5E7620415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */; };
 		791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E772041C4C400E5B9A9 /* DemoItems.swift */; };
+		79DE63FD20423DF200D7A3EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */; };
 		79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B2FF203EAE350070E7AD /* AppDelegate.swift */; };
 		79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B301203EAE350070E7AD /* LocationViewController.swift */; };
 		79F0B305203EAE350070E7AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F0B303203EAE350070E7AD /* Main.storyboard */; };
@@ -26,9 +25,8 @@
 		791D5E6D20411AD600E5B9A9 /* ItemsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsTableViewCell.swift; sourceTree = "<group>"; };
 		791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemsTableViewCell.xib; sourceTree = "<group>"; };
 		791D5E71204120A200E5B9A9 /* BeaconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconViewController.swift; sourceTree = "<group>"; };
-		791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsHeaderTableViewCell.swift; sourceTree = "<group>"; };
-		791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemsHeaderTableViewCell.xib; sourceTree = "<group>"; };
 		791D5E772041C4C400E5B9A9 /* DemoItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoItems.swift; sourceTree = "<group>"; };
+		79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		79F0B2FC203EAE350070E7AD /* LocationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79F0B2FF203EAE350070E7AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79F0B301203EAE350070E7AD /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -78,10 +76,9 @@
 				791D5E71204120A200E5B9A9 /* BeaconViewController.swift */,
 				79F0B303203EAE350070E7AD /* Main.storyboard */,
 				79F0B30B203EAE350070E7AD /* Info.plist */,
+				79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */,
 				791D5E6D20411AD600E5B9A9 /* ItemsTableViewCell.swift */,
 				791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */,
-				791D5E7320415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift */,
-				791D5E7420415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib */,
 				791D5E772041C4C400E5B9A9 /* DemoItems.swift */,
 			);
 			path = LocationDemo;
@@ -181,9 +178,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				791D5E7620415E5D00E5B9A9 /* ItemsHeaderTableViewCell.xib in Resources */,
 				791D5E7020411AD600E5B9A9 /* ItemsTableViewCell.xib in Resources */,
 				79F0B30A203EAE350070E7AD /* LaunchScreen.storyboard in Resources */,
+				79DE63FD20423DF200D7A3EF /* GoogleService-Info.plist in Resources */,
 				79F0B307203EAE350070E7AD /* Assets.xcassets in Resources */,
 				79F0B305203EAE350070E7AD /* Main.storyboard in Resources */,
 			);
@@ -258,7 +255,6 @@
 				791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */,
 				79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */,
 				79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */,
-				791D5E7520415E5D00E5B9A9 /* ItemsHeaderTableViewCell.swift in Sources */,
 				791D5E6F20411AD600E5B9A9 /* ItemsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
