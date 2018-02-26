@@ -87,7 +87,7 @@ extension SignificantChangeViewController: UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 150
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -105,6 +105,7 @@ extension SignificantChangeViewController: UITableViewDelegate, UITableViewDataS
             longitude: \(location.coordinate.longitude)
             distance with previous location: \(distance)
             name: \(placemark?.name ?? "")
+            date: \(location.timestamp)
             """
             cell.locationInfoLabel.text = locationInfo
 
