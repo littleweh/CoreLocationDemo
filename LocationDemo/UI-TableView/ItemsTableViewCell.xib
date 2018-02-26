@@ -38,6 +38,9 @@
                         <state key="normal" title="Start">
                             <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
+                        <connections>
+                            <action selector="startButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Aed-Xj-Luj"/>
+                        </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ff-yI-ycn">
                         <rect key="frame" x="200" y="8" width="48" height="27.5"/>
@@ -48,6 +51,9 @@
                         <state key="normal" title="Stop">
                             <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
+                        <connections>
+                            <action selector="stopButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="vO3-zI-M4H"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>

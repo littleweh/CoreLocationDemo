@@ -78,5 +78,61 @@
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="102.99850074962519"/>
         </scene>
+        <!--Significant Change View Controller-->
+        <scene sceneID="Cw3-9C-NJg">
+            <objects>
+                <viewController storyboardIdentifier="SignificantChangeVC" id="hmS-9B-biX" customClass="SignificantChangeViewController" customModule="LocationDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BQ8-0s-Uxq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="elp-xa-3HC">
+                                <rect key="frame" x="0.0" y="20" width="375" height="233.5"/>
+                            </mapView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="osi-lw-NWH">
+                                <rect key="frame" x="0.0" y="254" width="375" height="383"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="hmS-9B-biX" id="wXH-GS-ZWv"/>
+                                    <outlet property="delegate" destination="hmS-9B-biX" id="bsR-k6-XVc"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bf9-PE-0UM">
+                                <rect key="frame" x="0.0" y="637" width="375" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="5oO-U3-q6d"/>
+                                </constraints>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="bf9-PE-0UM" firstAttribute="leading" secondItem="gRU-9Q-cTv" secondAttribute="leading" id="5Bv-uC-qO7"/>
+                            <constraint firstItem="gRU-9Q-cTv" firstAttribute="trailing" secondItem="bf9-PE-0UM" secondAttribute="trailing" id="BEz-3d-Uhz"/>
+                            <constraint firstItem="osi-lw-NWH" firstAttribute="top" secondItem="elp-xa-3HC" secondAttribute="bottom" id="IvU-RM-LqT"/>
+                            <constraint firstItem="gRU-9Q-cTv" firstAttribute="trailing" secondItem="osi-lw-NWH" secondAttribute="trailing" id="TtW-X2-e0M"/>
+                            <constraint firstItem="bf9-PE-0UM" firstAttribute="bottom" secondItem="gRU-9Q-cTv" secondAttribute="bottom" id="V7A-zG-Kd2"/>
+                            <constraint firstItem="elp-xa-3HC" firstAttribute="leading" secondItem="gRU-9Q-cTv" secondAttribute="leading" id="YsM-Db-Cef"/>
+                            <constraint firstItem="gRU-9Q-cTv" firstAttribute="trailing" secondItem="elp-xa-3HC" secondAttribute="trailing" id="g3K-bh-Wfn"/>
+                            <constraint firstItem="elp-xa-3HC" firstAttribute="height" secondItem="BQ8-0s-Uxq" secondAttribute="height" multiplier="0.35" id="kZt-20-EfI"/>
+                            <constraint firstItem="bf9-PE-0UM" firstAttribute="top" secondItem="osi-lw-NWH" secondAttribute="bottom" id="oPF-n9-sGT"/>
+                            <constraint firstItem="osi-lw-NWH" firstAttribute="leading" secondItem="gRU-9Q-cTv" secondAttribute="leading" id="phD-b2-nuS"/>
+                            <constraint firstItem="elp-xa-3HC" firstAttribute="top" secondItem="gRU-9Q-cTv" secondAttribute="top" id="t3f-HM-b9z"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gRU-9Q-cTv"/>
+                    </view>
+                    <connections>
+                        <outlet property="backButton" destination="bf9-PE-0UM" id="jdt-1i-v3v"/>
+                        <outlet property="mapView" destination="elp-xa-3HC" id="ely-84-kYW"/>
+                        <outlet property="tableView" destination="osi-lw-NWH" id="uZI-en-0Iw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M38-ZX-1eZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="784.79999999999995" y="102.99850074962519"/>
+        </scene>
     </scenes>
 </document>
