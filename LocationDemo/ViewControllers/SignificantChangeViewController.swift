@@ -15,8 +15,12 @@ class SignificantChangeViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var backButton: UIButton!
+
     let locationManager = CLLocationManager()
+    let locationsProvider = LocationsProvider()
     let cellIdentifier = "SignificantChangeCell"
+
+    var locations: [CLLocation] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +29,9 @@ class SignificantChangeViewController: UIViewController {
 
         locationManager.delegate = self
         mapView.delegate = self
+        locationsProvider.delegate = self
+
+        locationsProvider.getSignificantChangeLocations()
 
     }
 
@@ -57,7 +64,7 @@ extension SignificantChangeViewController: CLLocationManagerDelegate {
 
 extension SignificantChangeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return locations.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -69,6 +76,13 @@ extension SignificantChangeViewController: UITableViewDelegate, UITableViewDataS
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SignificantChangeTableViewCell
         else { return UITableViewCell()}
         return cell
+    }
+
+}
+
+extension SignificantChangeViewController: LocationsProviderDelegate {
+    func locationsProvider(_ locationsProvider: LocationsProvider, didGet locations: [CLLocation]) {
+        self.locations = locations
     }
 
 }

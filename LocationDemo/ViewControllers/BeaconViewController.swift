@@ -171,7 +171,7 @@ class BeaconViewController: UIViewController {
         ])
     }
 
-    func setupRangingBeaconButton(){
+    func setupRangingBeaconButton() {
         rangingBeaconButton.translatesAutoresizingMaskIntoConstraints = false
         rangingBeaconButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         rangingBeaconButton.setTitle(

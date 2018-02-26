@@ -17,6 +17,7 @@
 		79DE64232043DF5600D7A3EF /* SignificantChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DE64222043DF5600D7A3EF /* SignificantChangeViewController.swift */; };
 		79DE64282043E22C00D7A3EF /* SignificantChangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DE64262043E22C00D7A3EF /* SignificantChangeTableViewCell.swift */; };
 		79DE64292043E22C00D7A3EF /* SignificantChangeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DE64272043E22C00D7A3EF /* SignificantChangeTableViewCell.xib */; };
+		79DE64302043F2DF00D7A3EF /* LocationsDataProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DE642F2043F2DF00D7A3EF /* LocationsDataProviders.swift */; };
 		79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B2FF203EAE350070E7AD /* AppDelegate.swift */; };
 		79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0B301203EAE350070E7AD /* LocationViewController.swift */; };
 		79F0B305203EAE350070E7AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F0B303203EAE350070E7AD /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 		79DE64222043DF5600D7A3EF /* SignificantChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignificantChangeViewController.swift; sourceTree = "<group>"; };
 		79DE64262043E22C00D7A3EF /* SignificantChangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignificantChangeTableViewCell.swift; sourceTree = "<group>"; };
 		79DE64272043E22C00D7A3EF /* SignificantChangeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignificantChangeTableViewCell.xib; sourceTree = "<group>"; };
+		79DE642F2043F2DF00D7A3EF /* LocationsDataProviders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsDataProviders.swift; sourceTree = "<group>"; };
 		79F0B2FC203EAE350070E7AD /* LocationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79F0B2FF203EAE350070E7AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79F0B301203EAE350070E7AD /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */,
 				79DE63FE2042405B00D7A3EF /* UI-TableView */,
 				79DE6402204240A500D7A3EF /* Constants */,
+				79DE642F2043F2DF00D7A3EF /* LocationsDataProviders.swift */,
 			);
 			path = LocationDemo;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				791D5E72204120A200E5B9A9 /* BeaconViewController.swift in Sources */,
 				791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */,
 				79DE64232043DF5600D7A3EF /* SignificantChangeViewController.swift in Sources */,
+				79DE64302043F2DF00D7A3EF /* LocationsDataProviders.swift in Sources */,
 				79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */,
 				79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */,
 				79DE64012042409D00D7A3EF /* FirebaseReference.swift in Sources */,

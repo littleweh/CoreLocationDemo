@@ -26,7 +26,7 @@ class LocationViewController: UIViewController {
             DemoItems.heading,
             DemoItems.significantChange,
             DemoItems.visit,
-            DemoItems.none,
+            DemoItems.none
     ]
     var selectedLocationService: DemoItems = DemoItems.none
     let dateFormatter = DateFormatter()
