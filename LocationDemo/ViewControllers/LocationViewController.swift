@@ -80,7 +80,7 @@ class LocationViewController: UIViewController {
                 comment: "Alert action in LocationVC"
                 ),
                 style: .default,
-                handler: { (action) in
+                handler: { (_) in
                     if let url = URL(string: UIApplicationOpenSettingsURLString) {
                         if UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -210,10 +210,11 @@ extension LocationViewController: CLLocationManagerDelegate {
         )
     }
 
-    // if user not allow location service authorization, use this to open settings
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == CLAuthorizationStatus.denied {
-            self.showLocationDisabledPopup()
+            manager.requestAlwaysAuthorization()
+            // if 'Always' is needed
+            // use self.authorizationRequest() to open app's settings
         }
     }
 
@@ -247,36 +248,6 @@ extension LocationViewController: CLLocationManagerDelegate {
         recordVisitReference
             .child("\(visit.arrivalDate)_" + DemoItems.visit.rawValue)
             .setValue(object)
-    }
-
-    func showLocationDisabledPopup() {
-        let alertController = UIAlertController(
-            title: "Background location Access Disabled",
-            message: "we need your location",
-            preferredStyle: .alert
-        )
-        let cancelAction = UIAlertAction(
-            title: "Cancel",
-            style: .cancel,
-            handler: nil
-        )
-        alertController.addAction(cancelAction)
-
-        let openAction = UIAlertAction(
-            title: "Open Settings",
-            style: .default
-        ) { _ in
-            if let url = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        }
-        alertController.addAction(openAction)
-
-        self.present(
-            alertController,
-            animated: true,
-            completion: nil
-        )
     }
 
 }
@@ -347,15 +318,6 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         selectedLocationService = demoItems[itemIndex]
 
         switch selectedLocationService {
-        case .significantChange, .visit:
-            if CLLocationManager.authorizationStatus() != .authorizedAlways {
-                self.authorizationRequest()
-            }
-        default:
-            break
-        }
-
-        switch selectedLocationService {
         case .none:
             break
         case .beacon:
@@ -377,19 +339,31 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             print("---------------------------------")
             locationManager.startUpdatingHeading()
         case .significantChange:
-            if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
-                print("need Always authorization")
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
             } else {
-                print("---------------------------------")
-                print("Significant-change location service")
-                print("---------------------------------")
-                locationManager.startMonitoringSignificantLocationChanges()
+                if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+                    print("need Always authorization")
+                } else {
+                    print("---------------------------------")
+                    print("Significant-change location service")
+                    print("---------------------------------")
+                    locationManager.startMonitoringSignificantLocationChanges()
+                }
             }
         case .visit:
-            print("---------------------------------")
-            print("start monitoring visits")
-            print("---------------------------------")
-            locationManager.startMonitoringVisits()
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
+            } else {
+                print("---------------------------------")
+                print("start monitoring visits")
+                print("---------------------------------")
+                locationManager.startMonitoringVisits()
+            }
         }
 
     }
