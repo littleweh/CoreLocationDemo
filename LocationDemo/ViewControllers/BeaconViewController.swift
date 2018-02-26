@@ -12,33 +12,33 @@ import CoreLocation
 class BeaconViewController: UIViewController {
 
     let backButton = UIButton()
+    let monitorRegionButton = UIButton()
+    let rangingBeaconButton = UIButton()
     let proximityLabel = UILabel()
     let beaconUUID: String = "A83CA210-A397-466B-B694-5181EE035A2C"
+
     let beaconLocationManager = CLLocationManager()
+
+    var isMonitoringRegion: Bool = false
+    var isRangingBeacon: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.view.addSubview(backButton)
         self.view.addSubview(proximityLabel)
+        self.view.addSubview(monitorRegionButton)
+        self.view.addSubview(rangingBeaconButton)
         setupBackButton()
         setupProximityLabel()
+        setupMonitorRegionButton()
+        setupRangingBeaconButton()
 
         beaconLocationManager.delegate = self
 
         if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self) {
-            if CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedWhenInUse {
-                beaconLocationManager.requestWhenInUseAuthorization()
-            }
-
-            if let uuid = UUID(uuidString: beaconUUID) {
-                monitorBeaconRegion(with: uuid)
-//                rangingBeacons(with: uuid)
-            } else {
-                proximityLabel.text = NSLocalizedString(
-                    "Please setup an iBeacon with UUID: \(beaconUUID)",
-                    comment: "proximity Label in BeaconVC"
-                )
+            if CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways {
+                beaconLocationManager.requestAlwaysAuthorization()
             }
         }
     }
@@ -49,37 +49,155 @@ class BeaconViewController: UIViewController {
 
     // MARK: Beacon region monitoring, ranging
 
-    func monitorBeaconRegion(with uuid: UUID) {
-        let beaconRegion = CLBeaconRegion(
-            proximityUUID: uuid,
-            identifier: ""
-        )
+    @objc func monitorBeaconRegion() {
+        if let uuid = UUID(uuidString: beaconUUID) {
+            let beaconRegion = CLBeaconRegion(
+                proximityUUID: uuid,
+                identifier: ""
+            )
 
-        beaconRegion.notifyOnEntry = true
-        beaconRegion.notifyOnExit = true
+            beaconRegion.notifyOnEntry = true
+            beaconRegion.notifyOnExit = true
 
-        beaconLocationManager.startMonitoring(for: beaconRegion)
+            if !isMonitoringRegion {
+                beaconLocationManager.startMonitoring(for: beaconRegion)
+
+                print("--------------")
+                print("start monitoring beacon region")
+                print("--------------")
+
+                monitorRegionButton.setTitle(
+                    NSLocalizedString(
+                        "stop monitoring",
+                        comment: "button in beaconVC"),
+                    for: .normal
+                )
+                monitorRegionButton.backgroundColor = .blue
+
+            } else {
+                beaconLocationManager.stopMonitoring(for: beaconRegion)
+
+                print("--------------")
+                print("stop monitoring beacon region")
+                print("--------------")
+
+                monitorRegionButton.setTitle(
+                    NSLocalizedString(
+                        "start monitoring",
+                        comment: "button in beaconVC"),
+                    for: .normal
+                )
+                monitorRegionButton.backgroundColor = .black
+            }
+            isMonitoringRegion = !isMonitoringRegion
+
+        } else {
+            proximityLabel.text = NSLocalizedString(
+                "Please setup an iBeacon with UUID: \(beaconUUID)",
+                comment: "proximity Label in BeaconVC"
+            )
+        }
     }
 
-    func rangingBeacons(with uuid: UUID) {
-        let beaconRegion = CLBeaconRegion(
-            proximityUUID: uuid,
-            identifier: ""
-        )
+    @objc func rangingBeacons() {
+        if let uuid = UUID(uuidString: beaconUUID) {
+            let beaconRegion = CLBeaconRegion(
+                proximityUUID: uuid,
+                identifier: ""
+            )
 
-        beaconRegion.notifyOnEntry = true
-        beaconRegion.notifyOnExit = true
+            beaconRegion.notifyOnEntry = true
+            beaconRegion.notifyOnExit = true
 
-        beaconLocationManager.startRangingBeacons(in: beaconRegion)
+            if !isRangingBeacon {
+                beaconLocationManager.startRangingBeacons(in: beaconRegion)
+
+                print("--------------")
+                print("start ranging beacon region")
+                print("--------------")
+
+                rangingBeaconButton.setTitle(
+                    NSLocalizedString(
+                        "stop ranging",
+                        comment: "button in beaconVC"),
+                    for: .normal
+                )
+                rangingBeaconButton.backgroundColor = .blue
+            } else {
+                beaconLocationManager.stopRangingBeacons(in: beaconRegion)
+
+                print("--------------")
+                print("stop ranging beacon region")
+                print("--------------")
+
+                rangingBeaconButton.setTitle(
+                    NSLocalizedString(
+                        "start ranging",
+                        comment: "button in beaconVC"),
+                    for: .normal
+                )
+                rangingBeaconButton.backgroundColor = .black
+            }
+            isRangingBeacon = !isRangingBeacon
+        } else {
+            proximityLabel.text = NSLocalizedString(
+                "Please setup an iBeacon with UUID: \(beaconUUID)",
+                comment: "proximity Label in BeaconVC"
+            )
+        }
 
     }
 
     // MARK: UI
 
+    func setupMonitorRegionButton() {
+        monitorRegionButton.translatesAutoresizingMaskIntoConstraints = false
+        monitorRegionButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        monitorRegionButton.setTitle(
+            NSLocalizedString("start monitoring", comment: "button in BeaconVC"),
+            for: .normal
+        )
+
+        monitorRegionButton.setTitleColor(.white, for: .normal)
+        monitorRegionButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+
+        monitorRegionButton.addTarget(self, action: #selector(monitorBeaconRegion), for: .touchUpInside)
+
+        NSLayoutConstraint.activate([
+            monitorRegionButton.bottomAnchor.constraint(equalTo: backButton.topAnchor, constant: -8),
+            monitorRegionButton.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            monitorRegionButton.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            monitorRegionButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    func setupRangingBeaconButton(){
+        rangingBeaconButton.translatesAutoresizingMaskIntoConstraints = false
+        rangingBeaconButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        rangingBeaconButton.setTitle(
+            NSLocalizedString("start ranging", comment: "button in BeaconVC"),
+            for: .normal
+        )
+
+        rangingBeaconButton.setTitleColor(.white, for: .normal)
+        rangingBeaconButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+
+        rangingBeaconButton.addTarget(self, action: #selector(rangingBeacons), for: .touchUpInside)
+
+        NSLayoutConstraint.activate([
+            rangingBeaconButton.bottomAnchor.constraint(equalTo: monitorRegionButton.topAnchor, constant: -8),
+            rangingBeaconButton.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            rangingBeaconButton.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            rangingBeaconButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+
+    }
+
     func setupProximityLabel() {
         proximityLabel.textColor = .black
         proximityLabel.font = UIFont.systemFont(ofSize: 17)
         proximityLabel.textAlignment = .center
+        proximityLabel.numberOfLines = 0
         proximityLabel.text = NSLocalizedString(
             "Proximity: not ranging yet",
             comment: "proximity Label in BeaconVC"
@@ -91,7 +209,7 @@ class BeaconViewController: UIViewController {
             proximityLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             proximityLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
             proximityLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20),
-            proximityLabel.heightAnchor.constraint(equalToConstant: 30)
+            proximityLabel.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 
@@ -161,17 +279,18 @@ extension BeaconViewController: CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didStartMonitoringFor region: CLRegion
     ) {
-        print("didStartMonitoringFor")
+        print("didStartMonitoringForRegion")
 
         manager.requestState(for: region)
     }
 
     // the location manager calls the method whenever there is a boundary transition for a region
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        print("didDetermineState")
         if state == CLRegionState.inside {
+            print("region inside")
             if CLLocationManager.isRangingAvailable() {
                 // swiftlint:disable force_cast
+                print("region inside, start ranging beacons")
                 manager.startRangingBeacons(in: region as! CLBeaconRegion)
                 // swiftlint:enable force_cast
             } else {
@@ -181,7 +300,7 @@ extension BeaconViewController: CLLocationManagerDelegate {
                 )
             }
         } else {
-            print("outside the region or unknown")
+            print("unknown/ region outside")
             // swiftlint:disable force_cast
             manager.stopRangingBeacons(in: region as! CLBeaconRegion)
             // swiftlint:enable force_cast
@@ -193,7 +312,7 @@ extension BeaconViewController: CLLocationManagerDelegate {
         didEnterRegion region: CLRegion
     ) {
         if CLLocationManager.isRangingAvailable() {
-            print("in DidEnterRegion")
+            print("enter the region, start ranging beacons")
             // swiftlint:disable force_cast
             manager.startRangingBeacons(in: region as! CLBeaconRegion)
             // swiftlint:enable force_cast
@@ -207,12 +326,12 @@ extension BeaconViewController: CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didExitRegion region: CLRegion
     ) {
-        print("in didExitRegion")
+        print("exited the Region")
 
         if let beaconRegion = region as? CLBeaconRegion {
             manager.stopRangingBeacons(in: beaconRegion)
         } else {
-            print("not beacon Region")
+            print("not in beacon Region")
         }
     }
 
@@ -226,33 +345,52 @@ extension BeaconViewController: CLLocationManagerDelegate {
             let major = CLBeaconMajorValue(truncating: nearestBeacon.major)
             let minor = CLBeaconMinorValue(truncating: nearestBeacon.minor)
 
-            print("Major: \(major) (floor)")
-            print("Minor: \(minor)")
-            print("Distance: \(nearestBeacon.accuracy) (meters)")
+            let beaconInfo = """
+            Major: \(major) (e.g. floor)
+            Minor: \(minor)
+            Distance: \(nearestBeacon.accuracy) (meters)
+            """
+            print(beaconInfo)
 
             switch nearestBeacon.proximity {
             case .immediate:
                 proximityLabel.text = NSLocalizedString(
-                    "Proximity: immediate",
+                    beaconInfo +
+                    """
+
+                    Proximity: immediate
+                    """,
                     comment: "proximity Label in BeaconVC"
                 )
                 print("Proximity: immediate")
 
             case .near:
                 proximityLabel.text = NSLocalizedString(
-                    "Proximity: near",
+                    beaconInfo +
+                    """
+
+                    Proximity: near
+                    """,
                     comment: "proximity Label in BeaconVC"
                 )
                 print("Proximity: near")
             case .far:
                 proximityLabel.text = NSLocalizedString(
-                    "Proximity: far",
+                    beaconInfo +
+                    """
+
+                    Proximity: far
+                    """,
                     comment: "proximity Label in BeaconVC"
                 )
                 print("Proximity: far")
             default:
                 proximityLabel.text = NSLocalizedString(
-                    "Beacon is not found",
+                    beaconInfo +
+                    """
+
+                    Beacon is not found
+                    """,
                     comment: "proximity Label in BeaconVC"
                 )
                 print("beacon with UUID \(nearestBeacon.proximityUUID), major: \(nearestBeacon.major), minor: \(nearestBeacon.minor) is not found")

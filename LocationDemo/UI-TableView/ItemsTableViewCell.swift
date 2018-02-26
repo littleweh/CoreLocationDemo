@@ -34,6 +34,4 @@ class ItemsTableViewCell: UITableViewCell {
         stopButton.clipsToBounds = true
     }
 
-
-
 }

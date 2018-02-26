@@ -17,7 +17,6 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     let locationManager = CLLocationManager()
-    let headerIdentifier = "ItemsHeaderCell"
     let cellIdentifier = "demoItems"
 
     var demoItems: [DemoItems] = [
@@ -37,12 +36,13 @@ class LocationViewController: UIViewController {
         setupTableView()
 
         locationManager.requestAlwaysAuthorization()
+
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.distanceFilter = kCLDistanceFilterNone // default
             locationManager.allowsBackgroundLocationUpdates = true
-//            locationManager.pausesLocationUpdatesAutomatically = true
+
             locationManager.requestLocation()
         }
 
