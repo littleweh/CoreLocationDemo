@@ -25,7 +25,8 @@ class LocationViewController: UIViewController {
             DemoItems.locationUpdating,
             DemoItems.heading,
             DemoItems.significantChange,
-            DemoItems.visit
+            DemoItems.visit,
+            DemoItems.none,
     ]
     var selectedLocationService: DemoItems = DemoItems.none
     let dateFormatter = DateFormatter()
@@ -168,7 +169,7 @@ extension LocationViewController: CLLocationManagerDelegate {
 //            print(placemark?.name)
 //        })
 
-        locationManager.allowDeferredLocationUpdates(untilTraveled: 0.0, timeout: 3.0)
+//        locationManager.allowDeferredLocationUpdates(untilTraveled: 0.0, timeout: 3.0)
 
     }
 
@@ -306,6 +307,19 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         )
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch demoItems[indexPath.row] {
+        case .significantChange:
+            if let significantChangeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignificantChangeVC") as? SignificantChangeViewController {
+                present(significantChangeVC, animated: true, completion: nil)
+            }
+        case .visit:
+            print(456)
+        default:
+            break
+        }
     }
 
     @objc func startFunction(_ sender: UIButton) {
