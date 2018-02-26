@@ -25,8 +25,7 @@ class LocationViewController: UIViewController {
             DemoItems.locationUpdating,
             DemoItems.heading,
             DemoItems.significantChange,
-            DemoItems.visit,
-            DemoItems.none
+            DemoItems.visit
     ]
     var selectedLocationService: DemoItems = DemoItems.none
     let dateFormatter = DateFormatter()
@@ -47,6 +46,53 @@ class LocationViewController: UIViewController {
             locationManager.requestLocation()
         }
 
+    }
+
+    func authorizationRequest() {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            locationManager.requestAlwaysAuthorization()
+        case .authorizedWhenInUse, .restricted, .denied:
+            let alertController = UIAlertController(
+                title: NSLocalizedString(
+                    "Background Location Access Disabled",
+                    comment: "alert in LocationVC"
+                ),
+                message: NSLocalizedString(
+                    "For background Location service Demo, please open this app's settings and set location access to 'Always'",
+                    comment: "alert in LocationVC"
+                ),
+                preferredStyle: .alert)
+
+            let cancelAction = UIAlertAction(
+                title: NSLocalizedString(
+                    "Cancel",
+                    comment: "Alert action in LocationVC"
+                ),
+                style: .cancel,
+                handler: nil
+            )
+            alertController.addAction(cancelAction)
+
+            let openAction = UIAlertAction(
+                title: NSLocalizedString(
+                "Open Settings",
+                comment: "Alert action in LocationVC"
+                ),
+                style: .default,
+                handler: { (action) in
+                    if let url = URL(string: UIApplicationOpenSettingsURLString) {
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    }
+            })
+            alertController.addAction(openAction)
+
+            self.present(alertController, animated: true, completion: nil)
+        case .authorizedAlways:
+            break
+        }
     }
 
     // MARK: setup UI
@@ -299,6 +345,15 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             else { return }
 
         selectedLocationService = demoItems[itemIndex]
+
+        switch selectedLocationService {
+        case .significantChange, .visit:
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+            }
+        default:
+            break
+        }
 
         switch selectedLocationService {
         case .none:

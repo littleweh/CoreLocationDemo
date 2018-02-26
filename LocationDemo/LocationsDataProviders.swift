@@ -57,6 +57,11 @@ class LocationsProvider {
                 let date = Date(timeIntervalSince1970: timestamp)
                 let location = CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: date)
                 locations.append(location)
+                locations = locations.sorted(by: { (location1, location2) -> Bool in
+                    if location1.timestamp <= location2.timestamp {
+                        return true
+                    } else { return false }
+                })
             }
             self.delegate?.locationsProvider(self, didGet: locations)
         }
