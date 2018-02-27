@@ -110,20 +110,22 @@ class BeaconViewController: UIViewController {
 
                 if CLLocationManager.authorizationStatus() != .authorizedAlways {
                     self.authorizationRequest()
+                } else {
+                    beaconLocationManager.startMonitoring(for: beaconRegion)
+
+                    print("--------------")
+                    print("start monitoring beacon region")
+                    print("--------------")
+
+                    monitorRegionButton.setTitle(
+                        NSLocalizedString(
+                            "stop monitoring",
+                            comment: "button in beaconVC"),
+                        for: .normal
+                    )
+                    monitorRegionButton.backgroundColor = .blue
                 }
-                beaconLocationManager.startMonitoring(for: beaconRegion)
 
-                print("--------------")
-                print("start monitoring beacon region")
-                print("--------------")
-
-                monitorRegionButton.setTitle(
-                    NSLocalizedString(
-                        "stop monitoring",
-                        comment: "button in beaconVC"),
-                    for: .normal
-                )
-                monitorRegionButton.backgroundColor = .blue
 
             } else {
                 beaconLocationManager.stopMonitoring(for: beaconRegion)
