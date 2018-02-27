@@ -40,11 +40,11 @@ class LocationViewController: UIViewController {
 
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
 
-//            locationManager.distanceFilter = kCLDistanceFilterNone // default
-            locationManager.distanceFilter = 15 // meters
+            locationManager.distanceFilter = kCLDistanceFilterNone // default
+//            locationManager.distanceFilter = 15 // meters
             locationManager.allowsBackgroundLocationUpdates = true
 
             locationManager.requestLocation()
@@ -52,106 +52,10 @@ class LocationViewController: UIViewController {
 
     }
 
-    @objc func startFunction(_ sender: UIButton) {
-        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
-
-        guard
-            let itemIndex = indexPath?.row
-            else { return }
-
-        selectedLocationService = demoItems[itemIndex]
-
-        switch selectedLocationService {
-        case .none:
-            break
-        case .beacon:
-            let beaconVC = BeaconViewController()
-            self.present(beaconVC, animated: true, completion: nil)
-        case .locationOnce:
-            print("---------------------------------")
-            print("request user's location only once")
-            print("---------------------------------")
-            locationManager.requestLocation()
-        case .locationUpdating:
-            print("---------------------------------")
-            print("keep updating user's locations")
-            print("---------------------------------")
-            locationManager.startUpdatingLocation()
-        case .heading:
-            print("---------------------------------")
-            print("keep updating user's heading")
-            print("---------------------------------")
-            locationManager.startUpdatingHeading()
-        case .significantChange:
-            if CLLocationManager.authorizationStatus() != .authorizedAlways {
-                self.authorizationRequest()
-                sender.backgroundColor = ColorUsed.paBlue
-                print("open settings.......")
-            } else {
-                if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
-                    print("need Always authorization")
-                } else {
-                    print("---------------------------------")
-                    print("Significant-change location service")
-                    print("---------------------------------")
-                    locationManager.startMonitoringSignificantLocationChanges()
-                }
-            }
-        case .visit:
-            if CLLocationManager.authorizationStatus() != .authorizedAlways {
-                self.authorizationRequest()
-                sender.backgroundColor = ColorUsed.paBlue
-                print("open settings.......")
-            } else {
-                print("---------------------------------")
-                print("start monitoring visits")
-                print("---------------------------------")
-                locationManager.startMonitoringVisits()
-            }
-        }
-
-    }
-
-    @objc func stopFunction(_ sender: UIButton) {
-        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
-        guard
-            let itemIndex = indexPath?.row
-            else { return }
-
-        switch demoItems[itemIndex] {
-        case .beacon, .locationOnce, .none:
-            break
-        case .locationUpdating:
-            print("---------------------------------")
-            print("stop updating user's locations")
-            print("---------------------------------")
-            locationManager.stopUpdatingLocation()
-        case .heading:
-            print("---------------------------------")
-            print("stop updating user's heading")
-            print("---------------------------------")
-            locationManager.stopUpdatingHeading()
-        case .significantChange:
-            print("---------------------------------")
-            print("stop monitoring significant location change")
-            print("---------------------------------")
-            locationManager.stopMonitoringSignificantLocationChanges()
-        case .visit:
-            print("---------------------------------")
-            print("stop monitoring visits")
-            print("---------------------------------")
-            locationManager.stopMonitoringVisits()
-        }
-        selectedLocationService = .none
-
-    }
-
     func authorizationRequest() {
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .restricted, .denied:
             let alertController = UIAlertController(
                 title: NSLocalizedString(
@@ -296,7 +200,10 @@ extension LocationViewController: CLLocationManagerDelegate {
 
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateHeading newHeading: CLHeading
+    ) {
 
         let headingInfo = """
         ----Device heading----
@@ -403,14 +310,111 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 
+    @objc func startFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        selectedLocationService = demoItems[itemIndex]
+
+        switch selectedLocationService {
+        case .none:
+            break
+        case .beacon:
+            let beaconVC = BeaconViewController()
+            self.present(beaconVC, animated: true, completion: nil)
+        case .locationOnce:
+            print("---------------------------------")
+            print("request user's location only once")
+            print("---------------------------------")
+            locationManager.requestLocation()
+        case .locationUpdating:
+            print("---------------------------------")
+            print("keep updating user's locations")
+            print("---------------------------------")
+            locationManager.startUpdatingLocation()
+        case .heading:
+            print("---------------------------------")
+            print("keep updating user's heading")
+            print("---------------------------------")
+            locationManager.headingFilter = 3 // degree
+            locationManager.headingOrientation = .portrait // default
+
+            locationManager.startUpdatingHeading()
+        case .significantChange:
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
+            } else {
+                if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+                    print("need Always authorization")
+                } else {
+                    print("---------------------------------")
+                    print("Significant-change location service")
+                    print("---------------------------------")
+                    locationManager.startMonitoringSignificantLocationChanges()
+                }
+            }
+        case .visit:
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
+            } else {
+                print("---------------------------------")
+                print("start monitoring visits")
+                print("---------------------------------")
+                locationManager.startMonitoringVisits()
+            }
+        }
+
+    }
+
+    @objc func stopFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        switch demoItems[itemIndex] {
+        case .beacon, .locationOnce, .none:
+            break
+        case .locationUpdating:
+            print("---------------------------------")
+            print("stop updating user's locations")
+            print("---------------------------------")
+            locationManager.stopUpdatingLocation()
+        case .heading:
+            print("---------------------------------")
+            print("stop updating user's heading")
+            print("---------------------------------")
+            locationManager.stopUpdatingHeading()
+        case .significantChange:
+            print("---------------------------------")
+            print("stop monitoring significant location change")
+            print("---------------------------------")
+            locationManager.stopMonitoringSignificantLocationChanges()
+        case .visit:
+            print("---------------------------------")
+            print("stop monitoring visits")
+            print("---------------------------------")
+            locationManager.stopMonitoringVisits()
+        }
+        selectedLocationService = .none
+
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch demoItems[indexPath.row] {
         case .significantChange:
             if let significantChangeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignificantChangeVC") as? SignificantChangeViewController {
                 present(significantChangeVC, animated: true, completion: nil)
             }
-        case .visit:
-            print(456)
         default:
             break
         }

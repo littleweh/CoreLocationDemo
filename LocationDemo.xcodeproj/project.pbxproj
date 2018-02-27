@@ -62,6 +62,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		797C928A20452BA30039F6BA /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				79DE64002042409D00D7A3EF /* FirebaseReference.swift */,
+				79DE642F2043F2DF00D7A3EF /* LocationsDataProviders.swift */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
 		79DE63FE2042405B00D7A3EF /* UI-TableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,7 +96,6 @@
 			isa = PBXGroup;
 			children = (
 				791D5E772041C4C400E5B9A9 /* DemoItems.swift */,
-				79DE64002042409D00D7A3EF /* FirebaseReference.swift */,
 				797C928820441F930039F6BA /* ColorsUsed.swift */,
 			);
 			path = Constants;
@@ -114,6 +122,7 @@
 		79F0B2FE203EAE350070E7AD /* LocationDemo */ = {
 			isa = PBXGroup;
 			children = (
+				797C928A20452BA30039F6BA /* Firebase */,
 				79DE63FF2042407200D7A3EF /* ViewControllers */,
 				79F0B311203EAE4F0070E7AD /* Supported Files */,
 				79F0B303203EAE350070E7AD /* Main.storyboard */,
@@ -121,7 +130,6 @@
 				79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */,
 				79DE63FE2042405B00D7A3EF /* UI-TableView */,
 				79DE6402204240A500D7A3EF /* Constants */,
-				79DE642F2043F2DF00D7A3EF /* LocationsDataProviders.swift */,
 			);
 			path = LocationDemo;
 			sourceTree = "<group>";
