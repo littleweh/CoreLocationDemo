@@ -91,7 +91,7 @@ class BeaconViewController: UIViewController {
     }
 
     deinit {
-        print("BeaconVC is dead")
+        print("BeaconVC deinit")
     }
 
     // MARK: Beacon region monitoring, ranging
@@ -125,7 +125,6 @@ class BeaconViewController: UIViewController {
                     )
                     monitorRegionButton.backgroundColor = .blue
                 }
-
 
             } else {
                 beaconLocationManager.stopMonitoring(for: beaconRegion)
