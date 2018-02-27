@@ -18,7 +18,7 @@ class LocationViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     let cellIdentifier = "demoItems"
-    var previousLocation: CLLocation? = nil // for distance calculation
+    var previousLocation: CLLocation? // for distance calculation
 
     var demoItems: [DemoItems] = [
             DemoItems.beacon,
@@ -43,8 +43,8 @@ class LocationViewController: UIViewController {
 //            locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
 
-            locationManager.distanceFilter = kCLDistanceFilterNone // default
-//            locationManager.distanceFilter = 15 // meters
+//            locationManager.distanceFilter = kCLDistanceFilterNone // default
+            locationManager.distanceFilter = 15 // meters
             locationManager.allowsBackgroundLocationUpdates = true
 
             locationManager.requestLocation()

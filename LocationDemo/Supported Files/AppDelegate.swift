@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager.requestWhenInUseAuthorization()
 
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
-            print(launchOptions?[UIApplicationLaunchOptionsKey.location])
+            print(launchOptions?[UIApplicationLaunchOptionsKey.location] as Any)
         }
 
         return true
