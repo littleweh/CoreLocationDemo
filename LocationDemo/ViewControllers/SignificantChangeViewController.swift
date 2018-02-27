@@ -108,6 +108,9 @@ extension SignificantChangeViewController: UITableViewDelegate, UITableViewDataS
             date: \(location.timestamp)
             """
             cell.locationInfoLabel.text = locationInfo
+            print("-----------")
+            print(locationInfo)
+            print("-----------")
 
         }
 

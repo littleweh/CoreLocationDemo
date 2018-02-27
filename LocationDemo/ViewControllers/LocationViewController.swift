@@ -18,6 +18,7 @@ class LocationViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     let cellIdentifier = "demoItems"
+    var previousLocation: CLLocation? = nil // for distance calculation
 
     var demoItems: [DemoItems] = [
             DemoItems.beacon,
@@ -39,8 +40,11 @@ class LocationViewController: UIViewController {
 
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+
             locationManager.distanceFilter = kCLDistanceFilterNone // default
+//            locationManager.distanceFilter = 15 // meters
             locationManager.allowsBackgroundLocationUpdates = true
 
             locationManager.requestLocation()
@@ -218,6 +222,8 @@ extension LocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         mapView.showsUserLocation = true
 
+        var distance = 0.0
+
         guard
             let location = locations.last
             else { return }
@@ -237,22 +243,21 @@ extension LocationViewController: CLLocationManagerDelegate {
 
         self.mapView.setRegion(region, animated: true)
 
-//        let myAnnotation = MKPointAnnotation()
-//        myAnnotation.coordinate = CLLocationCoordinate2D(
-//            latitude: location.coordinate.latitude,
-//            longitude: location.coordinate.longitude
-//        )
-//        mapView.addAnnotation(myAnnotation)
-
         var level = "N/A"
         if let floor = location.floor {
             level = "\(floor.level)"
         }
 
+        if let previousLocation = self.previousLocation {
+            distance = location.distance(from: previousLocation)
+        }
+        self.previousLocation = location
+
         let locationInfo = """
         ----User's Location----
         latitude: \(location.coordinate.latitude)
         longitude: \(location.coordinate.longitude)
+        distance with previous location: \(distance) meters
         altitude: \(location.altitude) meters
         floor: \(level)
         timestamp: \(location.timestamp)
@@ -271,6 +276,12 @@ extension LocationViewController: CLLocationManagerDelegate {
                 databaseRef: FirebaseRef.databaseSignificantChange,
                 dateFormatter: dateFormatter
             )
+            let myAnnotation = MKPointAnnotation()
+            myAnnotation.coordinate = CLLocationCoordinate2D(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+            )
+            mapView.addAnnotation(myAnnotation)
         case .locationUpdating:
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             FirebaseRef.saveLocationInfoWith(

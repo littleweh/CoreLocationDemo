@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
 
         locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
 
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             print(launchOptions?[UIApplicationLaunchOptionsKey.location])
