@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 import Firebase
 
 @UIApplicationMain
@@ -14,8 +15,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let locationManager = CLLocationManager()
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+
+        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+            print(launchOptions?[UIApplicationLaunchOptionsKey.location])
+        }
+
         return true
     }
 
@@ -41,4 +52,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+}
+
+extension AppDelegate: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("get location update in AppDelegate")
+    }
 }

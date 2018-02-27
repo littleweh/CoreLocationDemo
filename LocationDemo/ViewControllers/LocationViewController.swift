@@ -18,6 +18,7 @@ class LocationViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     let cellIdentifier = "demoItems"
+    var previousLocation: CLLocation? = nil // for distance calculation
 
     var demoItems: [DemoItems] = [
             DemoItems.beacon,
@@ -39,12 +40,111 @@ class LocationViewController: UIViewController {
 
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+
             locationManager.distanceFilter = kCLDistanceFilterNone // default
+//            locationManager.distanceFilter = 15 // meters
             locationManager.allowsBackgroundLocationUpdates = true
 
             locationManager.requestLocation()
         }
+
+    }
+
+    @objc func startFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        selectedLocationService = demoItems[itemIndex]
+
+        switch selectedLocationService {
+        case .none:
+            break
+        case .beacon:
+            let beaconVC = BeaconViewController()
+            self.present(beaconVC, animated: true, completion: nil)
+        case .locationOnce:
+            print("---------------------------------")
+            print("request user's location only once")
+            print("---------------------------------")
+            locationManager.requestLocation()
+        case .locationUpdating:
+            print("---------------------------------")
+            print("keep updating user's locations")
+            print("---------------------------------")
+            locationManager.startUpdatingLocation()
+        case .heading:
+            print("---------------------------------")
+            print("keep updating user's heading")
+            print("---------------------------------")
+            locationManager.startUpdatingHeading()
+        case .significantChange:
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
+            } else {
+                if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+                    print("need Always authorization")
+                } else {
+                    print("---------------------------------")
+                    print("Significant-change location service")
+                    print("---------------------------------")
+                    locationManager.startMonitoringSignificantLocationChanges()
+                }
+            }
+        case .visit:
+            if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                self.authorizationRequest()
+                sender.backgroundColor = ColorUsed.paBlue
+                print("open settings.......")
+            } else {
+                print("---------------------------------")
+                print("start monitoring visits")
+                print("---------------------------------")
+                locationManager.startMonitoringVisits()
+            }
+        }
+
+    }
+
+    @objc func stopFunction(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
+        guard
+            let itemIndex = indexPath?.row
+            else { return }
+
+        switch demoItems[itemIndex] {
+        case .beacon, .locationOnce, .none:
+            break
+        case .locationUpdating:
+            print("---------------------------------")
+            print("stop updating user's locations")
+            print("---------------------------------")
+            locationManager.stopUpdatingLocation()
+        case .heading:
+            print("---------------------------------")
+            print("stop updating user's heading")
+            print("---------------------------------")
+            locationManager.stopUpdatingHeading()
+        case .significantChange:
+            print("---------------------------------")
+            print("stop monitoring significant location change")
+            print("---------------------------------")
+            locationManager.stopMonitoringSignificantLocationChanges()
+        case .visit:
+            print("---------------------------------")
+            print("stop monitoring visits")
+            print("---------------------------------")
+            locationManager.stopMonitoringVisits()
+        }
+        selectedLocationService = .none
 
     }
 
@@ -80,7 +180,7 @@ class LocationViewController: UIViewController {
                 comment: "Alert action in LocationVC"
                 ),
                 style: .default,
-                handler: { (action) in
+                handler: { (_) in
                     if let url = URL(string: UIApplicationOpenSettingsURLString) {
                         if UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -120,6 +220,10 @@ extension LocationViewController: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        mapView.showsUserLocation = true
+
+        var distance = 0.0
+
         guard
             let location = locations.last
             else { return }
@@ -139,22 +243,21 @@ extension LocationViewController: CLLocationManagerDelegate {
 
         self.mapView.setRegion(region, animated: true)
 
-        let myAnnotation = MKPointAnnotation()
-        myAnnotation.coordinate = CLLocationCoordinate2D(
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
-        mapView.addAnnotation(myAnnotation)
-
         var level = "N/A"
         if let floor = location.floor {
             level = "\(floor.level)"
         }
 
+        if let previousLocation = self.previousLocation {
+            distance = location.distance(from: previousLocation)
+        }
+        self.previousLocation = location
+
         let locationInfo = """
         ----User's Location----
         latitude: \(location.coordinate.latitude)
         longitude: \(location.coordinate.longitude)
+        distance with previous location: \(distance) meters
         altitude: \(location.altitude) meters
         floor: \(level)
         timestamp: \(location.timestamp)
@@ -173,6 +276,12 @@ extension LocationViewController: CLLocationManagerDelegate {
                 databaseRef: FirebaseRef.databaseSignificantChange,
                 dateFormatter: dateFormatter
             )
+            let myAnnotation = MKPointAnnotation()
+            myAnnotation.coordinate = CLLocationCoordinate2D(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+            )
+            mapView.addAnnotation(myAnnotation)
         case .locationUpdating:
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             FirebaseRef.saveLocationInfoWith(
@@ -210,10 +319,11 @@ extension LocationViewController: CLLocationManagerDelegate {
         )
     }
 
-    // if user not allow location service authorization, use this to open settings
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == CLAuthorizationStatus.denied {
-            self.showLocationDisabledPopup()
+            manager.requestAlwaysAuthorization()
+            // if 'Always' is needed
+            // use self.authorizationRequest() to open app's settings
         }
     }
 
@@ -247,36 +357,6 @@ extension LocationViewController: CLLocationManagerDelegate {
         recordVisitReference
             .child("\(visit.arrivalDate)_" + DemoItems.visit.rawValue)
             .setValue(object)
-    }
-
-    func showLocationDisabledPopup() {
-        let alertController = UIAlertController(
-            title: "Background location Access Disabled",
-            message: "we need your location",
-            preferredStyle: .alert
-        )
-        let cancelAction = UIAlertAction(
-            title: "Cancel",
-            style: .cancel,
-            handler: nil
-        )
-        alertController.addAction(cancelAction)
-
-        let openAction = UIAlertAction(
-            title: "Open Settings",
-            style: .default
-        ) { _ in
-            if let url = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        }
-        alertController.addAction(openAction)
-
-        self.present(
-            alertController,
-            animated: true,
-            completion: nil
-        )
     }
 
 }
@@ -334,99 +414,6 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
-    }
-
-    @objc func startFunction(_ sender: UIButton) {
-        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
-
-        guard
-            let itemIndex = indexPath?.row
-            else { return }
-
-        selectedLocationService = demoItems[itemIndex]
-
-        switch selectedLocationService {
-        case .significantChange, .visit:
-            if CLLocationManager.authorizationStatus() != .authorizedAlways {
-                self.authorizationRequest()
-            }
-        default:
-            break
-        }
-
-        switch selectedLocationService {
-        case .none:
-            break
-        case .beacon:
-            let beaconVC = BeaconViewController()
-            self.present(beaconVC, animated: true, completion: nil)
-        case .locationOnce:
-            print("---------------------------------")
-            print("request user's location only once")
-            print("---------------------------------")
-            locationManager.requestLocation()
-        case .locationUpdating:
-            print("---------------------------------")
-            print("keep updating user's locations")
-            print("---------------------------------")
-            locationManager.startUpdatingLocation()
-        case .heading:
-            print("---------------------------------")
-            print("keep updating user's heading")
-            print("---------------------------------")
-            locationManager.startUpdatingHeading()
-        case .significantChange:
-            if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
-                print("need Always authorization")
-            } else {
-                print("---------------------------------")
-                print("Significant-change location service")
-                print("---------------------------------")
-                locationManager.startMonitoringSignificantLocationChanges()
-            }
-        case .visit:
-            print("---------------------------------")
-            print("start monitoring visits")
-            print("---------------------------------")
-            locationManager.startMonitoringVisits()
-        }
-
-    }
-
-    @objc func stopFunction(_ sender: UIButton) {
-        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-        var indexPath: IndexPath? = tableView.indexPathForRow(at: buttonPosition)
-        guard
-            let itemIndex = indexPath?.row
-            else { return }
-
-        switch demoItems[itemIndex] {
-        case .beacon, .locationOnce, .none:
-            break
-        case .locationUpdating:
-            print("---------------------------------")
-            print("stop updating user's locations")
-            print("---------------------------------")
-            locationManager.stopUpdatingLocation()
-        case .heading:
-            print("---------------------------------")
-            print("stop updating user's heading")
-            print("---------------------------------")
-            locationManager.stopUpdatingHeading()
-        case .significantChange:
-            print("---------------------------------")
-            print("stop monitoring significant location change")
-            print("---------------------------------")
-            locationManager.stopMonitoringSignificantLocationChanges()
-        case .visit:
-            print("---------------------------------")
-            print("stop monitoring visits")
-            print("---------------------------------")
-            locationManager.stopMonitoringVisits()
-        }
-        selectedLocationService = .none
-
     }
 
 }

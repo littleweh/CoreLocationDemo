@@ -43,6 +43,53 @@ class BeaconViewController: UIViewController {
         }
     }
 
+    func authorizationRequest() {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            beaconLocationManager.requestAlwaysAuthorization()
+        case .authorizedWhenInUse, .restricted, .denied:
+            let alertController = UIAlertController(
+                title: NSLocalizedString(
+                    "Background Location Access Disabled",
+                    comment: "alert in LocationVC"
+                ),
+                message: NSLocalizedString(
+                    "For background Location service Demo, please open this app's settings and set location access to 'Always'",
+                    comment: "alert in LocationVC"
+                ),
+                preferredStyle: .alert)
+
+            let cancelAction = UIAlertAction(
+                title: NSLocalizedString(
+                    "Cancel",
+                    comment: "Alert action in LocationVC"
+                ),
+                style: .cancel,
+                handler: nil
+            )
+            alertController.addAction(cancelAction)
+
+            let openAction = UIAlertAction(
+                title: NSLocalizedString(
+                    "Open Settings",
+                    comment: "Alert action in LocationVC"
+                ),
+                style: .default,
+                handler: { (_) in
+                    if let url = URL(string: UIApplicationOpenSettingsURLString) {
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    }
+            })
+            alertController.addAction(openAction)
+
+            self.present(alertController, animated: true, completion: nil)
+        case .authorizedAlways:
+            break
+        }
+    }
+
     deinit {
         print("BeaconVC is dead")
     }
@@ -60,19 +107,25 @@ class BeaconViewController: UIViewController {
             beaconRegion.notifyOnExit = true
 
             if !isMonitoringRegion {
-                beaconLocationManager.startMonitoring(for: beaconRegion)
 
-                print("--------------")
-                print("start monitoring beacon region")
-                print("--------------")
+                if CLLocationManager.authorizationStatus() != .authorizedAlways {
+                    self.authorizationRequest()
+                } else {
+                    beaconLocationManager.startMonitoring(for: beaconRegion)
 
-                monitorRegionButton.setTitle(
-                    NSLocalizedString(
-                        "stop monitoring",
-                        comment: "button in beaconVC"),
-                    for: .normal
-                )
-                monitorRegionButton.backgroundColor = .blue
+                    print("--------------")
+                    print("start monitoring beacon region")
+                    print("--------------")
+
+                    monitorRegionButton.setTitle(
+                        NSLocalizedString(
+                            "stop monitoring",
+                            comment: "button in beaconVC"),
+                        for: .normal
+                    )
+                    monitorRegionButton.backgroundColor = .blue
+                }
+
 
             } else {
                 beaconLocationManager.stopMonitoring(for: beaconRegion)

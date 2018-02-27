@@ -12,6 +12,7 @@
 		791D5E7020411AD600E5B9A9 /* ItemsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */; };
 		791D5E72204120A200E5B9A9 /* BeaconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E71204120A200E5B9A9 /* BeaconViewController.swift */; };
 		791D5E782041C4C400E5B9A9 /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791D5E772041C4C400E5B9A9 /* DemoItems.swift */; };
+		797C928920441F930039F6BA /* ColorsUsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797C928820441F930039F6BA /* ColorsUsed.swift */; };
 		79DE63FD20423DF200D7A3EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */; };
 		79DE64012042409D00D7A3EF /* FirebaseReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DE64002042409D00D7A3EF /* FirebaseReference.swift */; };
 		79DE64232043DF5600D7A3EF /* SignificantChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DE64222043DF5600D7A3EF /* SignificantChangeViewController.swift */; };
@@ -31,6 +32,7 @@
 		791D5E6E20411AD600E5B9A9 /* ItemsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemsTableViewCell.xib; sourceTree = "<group>"; };
 		791D5E71204120A200E5B9A9 /* BeaconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconViewController.swift; sourceTree = "<group>"; };
 		791D5E772041C4C400E5B9A9 /* DemoItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoItems.swift; sourceTree = "<group>"; };
+		797C928820441F930039F6BA /* ColorsUsed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsUsed.swift; sourceTree = "<group>"; };
 		79DE63FC20423DF200D7A3EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		79DE64002042409D00D7A3EF /* FirebaseReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseReference.swift; sourceTree = "<group>"; };
 		79DE64222043DF5600D7A3EF /* SignificantChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignificantChangeViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			children = (
 				791D5E772041C4C400E5B9A9 /* DemoItems.swift */,
 				79DE64002042409D00D7A3EF /* FirebaseReference.swift */,
+				797C928820441F930039F6BA /* ColorsUsed.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				79DE64302043F2DF00D7A3EF /* LocationsDataProviders.swift in Sources */,
 				79F0B302203EAE350070E7AD /* LocationViewController.swift in Sources */,
 				79F0B300203EAE350070E7AD /* AppDelegate.swift in Sources */,
+				797C928920441F930039F6BA /* ColorsUsed.swift in Sources */,
 				79DE64012042409D00D7A3EF /* FirebaseReference.swift in Sources */,
 				791D5E6F20411AD600E5B9A9 /* ItemsTableViewCell.swift in Sources */,
 				79DE64282043E22C00D7A3EF /* SignificantChangeTableViewCell.swift in Sources */,
